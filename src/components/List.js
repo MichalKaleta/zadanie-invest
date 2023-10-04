@@ -20,7 +20,10 @@ const List = () => {
   }, []);
 
   return (
-    <div style={{ minHeight: "90vh", width: "100%" }}>
+    <div
+      className="list-container"
+      style={{ minHeight: "90vh", width: "100%" }}
+    >
       {
         <div>
           <InfiniteScroll
@@ -40,7 +43,7 @@ const List = () => {
             loader={<p>Loading...</p>}
             endMessage={<p>No more data to load.</p>}
           >
-            <ul>
+            <ul className="list-wrap">
               {photos.map(({ id, user, urls, alt_description }) => (
                 <li key={id}>
                   {<img src={urls.thumb} alt={alt_description} />}
