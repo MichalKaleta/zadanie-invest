@@ -3,19 +3,16 @@ import { fetchPhotos } from "../api";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 let page = 1;
-
+const perPage = 30;
 const List = () => {
   const [photos, setPhotos] = useState([]);
   //const [page, setPage] = useState(1);
   const [photoLen, setPhotoLen] = useState(0);
   const [error, setError] = useState(null);
 
-  const scrollFetch = (page) => {};
-
   useEffect(() => {
     fetchPhotos({ perPage: 30, page: 1 })
       .then((res) => {
-        console.log(res);
         setPhotos(res.images);
         setPhotoLen(res.total);
       })
@@ -27,28 +24,27 @@ const List = () => {
       {
         <div>
           <InfiniteScroll
-            dataLength={30 * (page + 1)}
+            dataLength={photos.length}
             next={() => {
               let newPage = page + 1;
-              fetchPhotos({ perPage: 30 * newPage, page: newPage })
+              fetchPhotos({ perPage, page: newPage })
                 .then((res) => {
-                  console.log(res);
-                  setPhotos(res.images);
-                  page = newPage;
+                  setPhotos((photos) => {
+                    page = newPage;
+                    return [...photos, ...res.images];
+                  });
                 })
                 .catch((error) => setError(error));
             }}
-            hasMore={
-              true
-              //    30 * (page + 1) < photoLen
-            } // Replace with a condition based on your data source
+            hasMore={perPage * (page + 1) < photoLen} // Replace with a condition based on your data source
             loader={<p>Loading...</p>}
             endMessage={<p>No more data to load.</p>}
           >
             <ul>
-              {photos.map(({ id, urls, alt_description }) => (
+              {photos.map(({ id, user, urls, alt_description }) => (
                 <li key={id}>
-                  <img src={urls.thumb} alt={alt_description} />
+                  {<img src={urls.thumb} alt={alt_description} />}
+                  <p>{user.first_name + " " + user.last_name || ""}</p>
                 </li>
               ))}
             </ul>
