@@ -5,9 +5,8 @@ export const fetchPhotos = ({ perPage, page }) => {
     const start = (page - 1) * perPage;
     const end = start + perPage;
     const pageData = data.slice(start, end);
-    console.log(start, end);
     setTimeout(() => {
       res({ images: pageData, total: data.length });
-    }, 300);
+    }, 2000);
   });
 };
